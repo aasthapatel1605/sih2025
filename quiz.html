@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Card - KrishiMitra</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rosario&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/sansation-light" rel="stylesheet">
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        /* Learning Container Styles */
+        .learning-container {
+            width: 300px;
+            display: block;
+            padding-top: 50px; /* Space for top back button */
+            position: relative;
+        }
+
+        /* Learning Card Styles */
+        .learning-card {
+            background-color: #E8F5E8;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .learning-card:hover {
+            transform: scale(1.02);
+        }
+
+        .learning-card.monsoon {
+            background-color: #E8F5E8;
+        }
+
+        .learning-content-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .learning-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            flex-shrink: 0;
+        }
+
+        .learning-icon.plant { background-color: #4CAF50; }
+        .learning-icon.monsoon { background-color: #9C27B0; }
+        .learning-icon.pest { background-color: #F44336; }
+        .learning-icon.crop { background-color: #FFC107; }
+        .learning-icon.water { background-color: #2196F3; }
+        .learning-icon.solar { background-color: #FF9800; }
+        .learning-icon.tree { background-color: #795548; }
+
+        .learning-title {
+            font-weight: bold;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .learning-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .difficulty-badge {
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .easy {
+            background-color: #FFA726;
+        }
+
+        .medium {
+            background-color: #FF7043;
+        }
+
+        .points-badge {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .learning-arrow {
+            font-size: 18px;
+            color: #666;
+        }
+
+        /* Quiz Container Styles */
+        .quiz-container {
+            width: 100%;
+            max-width: 430px;
+            margin: 30px auto;
+            padding-top: 50px; /* Space for top back button */
+            display: none;
+            overflow-y: auto;
+            max-height: 80vh;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            position: relative;
+        }
+
+        .quiz-container.show {
+            display: block;
+        }
+
+        .quiz-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-container {
+            margin-bottom: 40px;
+        }
+
+        .category-title {
+            font-family: 'Noto Sans Devanagari', sans-serif;
+            font-size: 1.5rem;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .quiz-card {
+            width: 316px;
+            height: 371px;
+            border-radius: 22px;
+            background: rgba(240, 240, 240, 0.5);
+            opacity: 0.95;
+            padding: 24px;
+            box-sizing: border-box;
+            color: #333;
+            margin: 0 auto 20px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .quiz-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .question-text {
+            width: 241px;
+            height: 40px;
+            margin: 0 auto 20px;
+            font-family: 'Noto Sans Devanagari', 'Rosario', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            text-align: center;
+            line-height: 122%;
+            padding: 4px;
+            border-radius: 8px;
+            color: #222;
+            background-color: transparent;
+            text-transform: uppercase;
+        }
+
+        .option {
+            width: 253px;
+            height: 37px;
+            background: rgba(230, 230, 230, 0.7);
+            border-radius: 18px;
+            margin: 8px auto;
+            text-align: center;
+            line-height: 37px;
+            font-size: 13px;
+            font-family: 'Noto Sans Devanagari', 'Sansation Light', sans-serif;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s, transform 0.2s;
+            color: #444;
+            border: 1px solid rgba(200, 200, 200, 0.5);
+        }
+
+        .option:hover {
+            background: rgba(210, 210, 210, 0.9);
+            transform: scale(1.02);
+        }
+
+        .option.selected {
+            background: #228B22;
+            color: white;
+            font-weight: bold;
+            border: 2px solid #006400;
+            transform: scale(1.05);
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 18px;
+        }
+
+        .submit-btn {
+            padding: 8px 16px;
+            background: #32CD32;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #006400;
+        }
+
+        .top-back-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 25px;
+            height: 25px;
+            background: #FF9800;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .learning-container .top-back-btn {
+            top: 50px; /* Align with the top of the first learning card */
+            left: -40px; /* Move slightly left of the card */
+        }
+
+        .top-back-btn:hover {
+            background: #F57C00;
+            transform: scale(1.1);
+        }
+
+        .top-back-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 350px) {
+            .learning-container {
+                width: 90%;
+            }
+
+            .learning-card {
+                padding: 12px;
+            }
+
+            .learning-title {
+                font-size: 14px;
+            }
+
+            .learning-meta {
+                font-size: 11px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .quiz-container {
+                max-width: 600px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .quiz-container {
+                max-width: 800px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="learning-container" id="learning-container">
+        <button class="top-back-btn" onclick="goHome()" aria-label="Go to Home" disabled>←</button>
+        <div class="learning-card" onclick="showQuiz('organic-farming')">
+            <div class="learning-content-wrapper">
+                <div class="learning-icon plant" aria-label="Plant icon">🌱</div>
+                <div class="learning-content">
+                    <div class="learning-title">जैविक खेती की मूल बातें</div>
+                    <div class="learning-meta">
+                        <span class="learning-time">⏱ 3 min</span>
+                        <span class="difficulty-badge easy">Easy</span>
+                        <span class="points-badge">+50 pts</span>
+                    </div>
+                </div>
+            </div>
+            <div class="learning-arrow">></div>
+        </div>
+
+        <div class="learning-card monsoon" onclick="showQuiz('monsoon-farming')">
+            <div class="learning-content-wrapper">
+                <div class="learning-icon monsoon" aria-label="Monsoon icon">🌧️</div>
+                <div class="learning-content">
+                    <div class="learning-title">मानसून खेती</div>
+                    <div class="learning-meta">
+                        <span class="learning-time">⏱ 4 min</span>
+                        <span class="difficulty-badge easy">Easy</span>
+                        <span class="points-badge">+60 pts</span>
+                    </div>
+                </div>
+            </div>
+            <div class="learning-arrow">></div>
+        </div>
+
+        <div class="learning-card" onclick="showQuiz('pest-control')">
+            <div class="learning-content-wrapper">
+                <div class="learning-icon pest" aria-label="Pest icon">🐞</div>
+                <div class="learning-content">
+                    <div class="learning-title">कीट नियंत्रण तकनीक</div>
+                    <div class="learning-meta">
+                        <span class="learning-time">⏱ 5 min</span>
+                        <span class="difficulty-badge medium">Medium</span>
+                        <span class="points-badge">+70 pts</span>
+                    </div>
+                </div>
+            </div>
+            <div class="learning-arrow">></div>
+        </div>
+
+        <div class="learning-card" onclick="showQuiz('crop-rotation')">
+            <div class="learning-content-wrapper">
+                <div class="learning-icon crop" aria-label="Crop icon">🌾</div>
+                <div class="learning-content">
+                    <div class="learning-title">फसल चक्र प्रबंधन</div>
+                    <div class="learning-meta">
+                        <span class="learning-time">⏱ 4 min</span>
+                        <span class="difficulty-badge easy">Easy</span>
+                        <span class="points-badge">+55 pts</span>
+                    </div>
+                </div>
+            </div>
+            <div class="learning-arrow">></div>
+        </div>
+
+        <div class="learning-card" onclick="showQuiz('water-conservation')">
+            <div class="learning-content-wrapper">
+                <div class="learning-icon water" aria-label="Water icon">💧</div>
+                <div class="learning-content">
+                    <div class="learning-title">जल संरक्षण विधियाँ</div>
+                    <div class="learning-meta">
+                        <span class="learning-time">⏱ 6 min</span>
+                        <span class="difficulty-badge medium">Medium</span>
+                        <span class="points-badge">+80 pts</span>
+                    </div>
+                </div>
+            </div>
+            <div class="learning-arrow">></div>
+        </div>
+
+        <div class="learning-card" onclick="showQuiz('solar-energy')">
+            <div class="learning-content-wrapper">
+                <div class="learning-icon solar" aria-label="Solar icon">🌞</div>
+                <div class="learning-content">
+                    <div class="learning-title">सौर ऊर्जा का उपयोग</div>
+                    <div class="learning-meta">
+                        <span class="learning-time">⏱ 5 min</span>
+                        <span class="difficulty-badge easy">Easy</span>
+                        <span class="points-badge">+65 pts</span>
+                    </div>
+                </div>
+            </div>
+            <div class="learning-arrow">></div>
+        </div>
+
+        <div class="learning-card" onclick="showQuiz('tree-plantation')">
+            <div class="learning-content-wrapper">
+                <div class="learning-icon tree" aria-label="Tree icon">🌳</div>
+                <div class="learning-content">
+                    <div class="learning-title">वृक्षारोपण लाभ</div>
+                    <div class="learning-meta">
+                        <span class="learning-time">⏱ 4 min</span>
+                        <span class="difficulty-badge easy">Easy</span>
+                        <span class="points-badge">+50 pts</span>
+                    </div>
+                </div>
+            </div>
+            <div class="learning-arrow">></div>
+        </div>
+    </div>
+
+    <!-- Quiz for Organic Farming -->
+    <div class="quiz-container" id="quiz-organic-farming">
+        <button class="top-back-btn" onclick="goBack()" aria-label="Back to Lessons">←</button>
+        <div class="category-container">
+            <h2 class="category-title">जैविक खेती</h2>
+            <div class="quiz-card">
+                <div class="question-text">Q1. जैविक खेती में कीटनाशकों का उपयोग कैसा है?</div>
+                <div class="option" onclick="selectOption(this)">कम</div>
+                <div class="option" onclick="selectOption(this)">मिट्टी अपरदन कम करना</div>
+                <div class="option" onclick="selectOption(this)">नाइट्रेट रिसाव कम</div>
+                <div class="option" onclick="selectOption(this)">सभी</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+            <div class="quiz-card">
+                <div class="question-text">Q2. जैविक खेती पर्यावरण के अनुकूल क्यों है?</div>
+                <div class="option" onclick="selectOption(this)">पारंपरिक कृषि की तुलना में</div>
+                <div class="option" onclick="selectOption(this)">रासायनिक कीटनाशकों का उपयोग नहीं</div>
+                <div class="option" onclick="selectOption(this)">सिंथेटिक उर्वरक</div>
+                <div class="option" onclick="selectOption(this)">सभी</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+            <div class="quiz-card">
+                <div class="question-text">Q3. एनपीओपी क्या है?</div>
+                <div class="option" onclick="selectOption(this)">जैविक उत्पादन मानक</div>
+                <div class="option" onclick="selectOption(this)">प्रमाणन निकायों के लिए मान्यता कार्यक्रम</div>
+                <div class="option" onclick="selectOption(this)">जैविक कृषि का प्रचार</div>
+                <div class="option" onclick="selectOption(this)">सभी</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+            <div class="quiz-card">
+                <div class="question-text">Q4. 2021 में सबसे बड़ा जैविक उत्पादक देश कौन सा था?</div>
+                <div class="option" onclick="selectOption(this)">ऑस्ट्रेलिया</div>
+                <div class="option" onclick="selectOption(this)">भारत</div>
+                <div class="option" onclick="selectOption(this)">चीन</div>
+                <div class="option" onclick="selectOption(this)">अमेरिका</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+            <div class="quiz-card">
+                <div class="question-text">Q5. बायोडायनामिक कृषि क्या है?</div>
+                <div class="option" onclick="selectOption(this)">फार्म को जीवित प्रणाली के रूप में मानना</div>
+                <div class="option" onclick="selectOption(this)">स्वस्थ मिट्टी पर जोर</div>
+                <div class="option" onclick="selectOption(this)">पौष्टिक भोजन उत्पादन</div>
+                <div class="option" onclick="selectOption(this)">सभी</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz for Monsoon Farming -->
+    <div class="quiz-container" id="quiz-monsoon-farming">
+        <button class="top-back-btn" onclick="goBack()" aria-label="Back to Lessons">←</button>
+        <div class="category-container">
+            <h2 class="category-title">मानसून खेती</h2>
+            <div class="quiz-card">
+                <div class="question-text">Q1. मानसून खेती में मुख्य फसल क्या है?</div>
+                <div class="option" onclick="selectOption(this)">धान</div>
+                <div class="option" onclick="selectOption(this)">गेहूं</div>
+                <div class="option" onclick="selectOption(this)">जौ</div>
+                <div class="option" onclick="selectOption(this)">मक्का</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+            <div class="quiz-card">
+                <div class="question-text">Q2. मानसून के दौरान मिट्टी की उर्वरता कैसे बढ़ाई जाती है?</div>
+                <div class="option" onclick="selectOption(this)">जैविक खाद का उपयोग</div>
+                <div class="option" onclick="selectOption(this)">रासायनिक उर्वरक</div>
+                <div class="option" onclick="selectOption(this)">सिंचाई में कमी</div>
+                <div class="option" onclick="selectOption(this)">सभी</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+            <div class="quiz-card">
+                <div class="question-text">Q3. मानसून खेती में जल प्रबंधन का महत्व क्या है?</div>
+                <div class="option" onclick="selectOption(this)">जल संरक्षण</div>
+                <div class="option" onclick="selectOption(this)">बाढ़ नियंत्रण</div>
+                <div class="option" onclick="selectOption(this)">सिंचाई अनुकूलन</div>
+                <div class="option" onclick="selectOption(this)">सभी</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz for Pest Control -->
+    <div class="quiz-container" id="quiz-pest-control">
+        <button class="top-back-btn" onclick="goBack()" aria-label="Back to Lessons">←</button>
+        <div class="category-container">
+            <h2 class="category-title">कीट नियंत्रण तकनीक</h2>
+            <div class="quiz-card">
+                <div class="question-text">Q1. प्राकृतिक कीट नियंत्रण का एक तरीका क्या है?</div>
+                <div class="option" onclick="selectOption(this)">रासायनिक कीटनाशक</div>
+                <div class="option" onclick="selectOption(this)">लेडी बर्ड बीटल</div>
+                <div class="option" onclick="selectOption(this)">सिंथेटिक जाल</div>
+                <div class="option" onclick="selectOption(this)">उच्च तापमान</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+            <div class="quiz-card">
+                <div class="question-text">Q2. फेरोमोन जाल का उपयोग किस लिए होता है?</div>
+                <div class="option" onclick="selectOption(this)">कीटों को आकर्षित करना</div>
+                <div class="option" onclick="selectOption(this)">पौधों को पोषण देना</div>
+                <div class="option" onclick="selectOption(this)">मिट्टी की उर्वरता बढ़ाना</div>
+                <div class="option" onclick="selectOption(this)">पानी का संरक्षण</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+            <div class="quiz-card">
+                <div class="question-text">Q3. एकीकृत कीट प्रबंधन (IPM) क्या है?</div>
+                <div class="option" onclick="selectOption(this)">केवल रासायनिक नियंत्रण</div>
+                <div class="option" onclick="selectOption(this)">जैविक और रासायनिक तरीकों का संयोजन</div>
+                <div class="option" onclick="selectOption(this)">केवल जैविक नियंत्रण</div>
+                <div class="option" onclick="selectOption(this)">कोई नियंत्रण नहीं</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz for Crop Rotation -->
+    <div class="quiz-container" id="quiz-crop-rotation">
+        <button class="top-back-btn" onclick="goBack()" aria-label="Back to Lessons">←</button>
+        <div class="category-container">
+            <h2 class="category-title">फसल चक्र प्रबंधन</h2>
+            <div class="quiz-card">
+                <div class="question-text">Q1. फसल चक्र का मुख्य उद्देश्य क्या है?</div>
+                <div class="option" onclick="selectOption(this)">मिट्टी की उर्वरता बनाए रखना</div>
+                <div class="option" onclick="selectOption(this)">पानी की बचत</div>
+                <div class="option" onclick="selectOption(this)">उत्पादन में कमी</div>
+                <div class="option" onclick="selectOption(this)">कीटों को बढ़ाना</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+            <div class="quiz-card">
+                <div class="question-text">Q2. फसल चक्र में किन फसलों को शामिल किया जाता है?</div>
+                <div class="option" onclick="selectOption(this)">केवल एक फसल</div>
+                <div class="option" onclick="selectOption(this)">दलहन और तिलहन</div>
+                <div class="option" onclick="selectOption(this)">केवल अनाज</div>
+                <div class="option" onclick="selectOption(this)">कोई फसल नहीं</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+            <div class="quiz-card">
+                <div class="question-text">Q3. फसल चक्र से कीट नियंत्रण कैसे होता है?</div>
+                <div class="option" onclick="selectOption(this)">कीटों का जीवन चक्र तोड़ना</div>
+                <div class="option" onclick="selectOption(this)">रासायनिक कीटनाशक बढ़ाना</div>
+                <div class="option" onclick="selectOption(this)">मिट्टी को नष्ट करना</div>
+                <div class="option" onclick="selectOption(this)">पानी की खपत बढ़ाना</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz for Water Conservation -->
+    <div class="quiz-container" id="quiz-water-conservation">
+        <button class="top-back-btn" onclick="goBack()" aria-label="Back to Lessons">←</button>
+        <div class="category-container">
+            <h2 class="category-title">जल संरक्षण विधियाँ</h2>
+            <div class="quiz-card">
+                <div class="question-text">Q1. ड्रिप सिंचाई का मुख्य लाभ क्या है?</div>
+                <div class="option" onclick="selectOption(this)">पानी की बचत</div>
+                <div class="option" onclick="selectOption(this)">मिट्टी का कटाव</div>
+                <div class="option" onclick="selectOption(this)">उर्वरक की खपत बढ़ाना</div>
+                <div class="option" onclick="selectOption(this)">कीटों को आकर्षित करना</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+            <div class="quiz-card">
+                <div class="question-text">Q2. वर्षा जल संचयन का उपयोग किस लिए होता है?</div>
+                <div class="option" onclick="selectOption(this)">भूजल स्तर बढ़ाना</div>
+                <div class="option" onclick="selectOption(this)">मिट्टी को नम करना</div>
+                <div class="option" onclick="selectOption(this)">सिंचाई के लिए पानी</div>
+                <div class="option" onclick="selectOption(this)">सभी</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+            <div class="quiz-card">
+                <div class="question-text">Q3. मल्चिंग से जल संरक्षण कैसे होता है?</div>
+                <div class="option" onclick="selectOption(this)">वाष्पीकरण कम करना</div>
+                <div class="option" onclick="selectOption(this)">मिट्टी को गर्म करना</div>
+                <div class="option" onclick="selectOption(this)">पानी की खपत बढ़ाना</div>
+                <div class="option" onclick="selectOption(this)">कीटों को बढ़ाना</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz for Solar Energy -->
+    <div class="quiz-container" id="quiz-solar-energy">
+        <button class="top-back-btn" onclick="goBack()" aria-label="Back to Lessons">←</button>
+        <div class="category-container">
+            <h2 class="category-title">सौर ऊर्जा का उपयोग</h2>
+            <div class="quiz-card">
+                <div class="question-text">Q1. सौर ऊर्जा का कृषि में उपयोग क्या है?</div>
+                <div class="option" onclick="selectOption(this)">सिंचाई पंप चलाना</div>
+                <div class="option" onclick="selectOption(this)">मिट्टी को गर्म करना</div>
+                <div class="option" onclick="selectOption(this)">कीटों को मारना</div>
+                <div class="option" onclick="selectOption(this)">फसल सुखाना</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+            <div class="quiz-card">
+                <div class="question-text">Q2. सौर पैनल का मुख्य लाभ क्या है?</div>
+                <div class="option" onclick="selectOption(this)">लागत में कमी</div>
+                <div class="option" onclick="selectOption(this)">पर्यावरण के अनुकूल</div>
+                <div class="option" onclick="selectOption(this)">लंबी आयु</div>
+                <div class="option" onclick="selectOption(this)">सभी</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+            <div class="quiz-card">
+                <div class="question-text">Q3. सौर ऊर्जा से चलने वाला उपकरण कौन सा है?</div>
+                <div class="option" onclick="selectOption(this)">सौर ड्रायर</div>
+                <div class="option" onclick="selectOption(this)">रासायनिक स्प्रेयर</div>
+                <div class="option" onclick="selectOption(this)">मिट्टी खोदने की मशीन</div>
+                <div class="option" onclick="selectOption(this)">कोई नहीं</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz for Tree Plantation -->
+    <div class="quiz-container" id="quiz-tree-plantation">
+        <button class="top-back-btn" onclick="goBack()" aria-label="Back to Lessons">←</button>
+        <div class="category-container">
+            <h2 class="category-title">वृक्षारोपण लाभ</h2>
+            <div class="quiz-card">
+                <div class="question-text">Q1. वृक्षारोपण का पर्यावरणीय लाभ क्या है?</div>
+                <div class="option" onclick="selectOption(this)">कार्बन डाइऑक्साइड अवशोषण</div>
+                <div class="option" onclick="selectOption(this)">मिट्टी का कटाव रोकना</div>
+                <div class="option" onclick="selectOption(this)">जलवायु नियंत्रण</div>
+                <div class="option" onclick="selectOption(this)">सभी</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+            <div class="quiz-card">
+                <div class="question-text">Q2. वृक्षारोपण से मिट्टी की उर्वरता कैसे बढ़ती है?</div>
+                <div class="option" onclick="selectOption(this)">पत्तियों का सड़ना</div>
+                <div class="option" onclick="selectOption(this)">जड़ों का फैलाव</div>
+                <div class="option" onclick="selectOption(this)">पानी की खपत कम करना</div>
+                <div class="option" onclick="selectOption(this)">सभी</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+            <div class="quiz-card">
+                <div class="question-text">Q3. वृक्षारोपण का सामाजिक लाभ क्या है?</div>
+                <div class="option" onclick="selectOption(this)">छाया प्रदान करना</div>
+                <div class="option" onclick="selectOption(this)">आय का स्रोत</div>
+                <div class="option" onclick="selectOption(this)">जैव विविधता बढ़ाना</div>
+                <div class="option" onclick="selectOption(this)">सभी</div>
+                <div class="buttons"><button class="submit-btn" onclick="submitAnswer(this)">SUBMIT</button></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showQuiz(category) {
+            document.getElementById('learning-container').style.display = 'none';
+            document.getElementById(`quiz-${category}`).style.display = 'block';
+            const quizCards = document.querySelectorAll(`#quiz-${category} .quiz-card`);
+            quizCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('show');
+                }, index * 100);
+            });
+        }
+
+        function goBack() {
+            document.querySelectorAll('.quiz-container').forEach(container => {
+                container.style.display = 'none';
+            });
+            document.getElementById('learning-container').style.display = 'block';
+        }
+
+        function goHome() {
+            alert('Navigating to Home (placeholder action)');
+            // Add logic here for navigating to a home page if needed
+        }
+
+        function selectOption(element) {
+            const card = element.closest('.quiz-card');
+            card.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        function submitAnswer(button) {
+            const card = button.closest('.quiz-card');
+            const selected = card.querySelector('.option.selected');
+            const questionText = card.querySelector('.question-text').textContent;
+
+            // Correct answers for all quizzes
+            const correctAnswers = {
+                // Organic Farming
+                'Q1. जैविक खेती में कीटनाशकों का उपयोग कैसा है?': 'कम',
+                'Q2. जैविक खेती पर्यावरण के अनुकूल क्यों है?': 'सभी',
+                'Q3. एनपीओपी क्या है?': 'सभी',
+                'Q4. 2021 में सबसे बड़ा जैविक उत्पादक देश कौन सा था?': 'ऑस्ट्रेलिया',
+                'Q5. बायोडायनामिक कृषि क्या है?': 'सभी',
+                // Monsoon Farming
+                'Q1. मानसून खेती में मुख्य फसल क्या है?': 'धान',
+                'Q2. मानसून के दौरान मिट्टी की उर्वरता कैसे बढ़ाई जाती है?': 'जैविक खाद का उपयोग',
+                'Q3. मानसून खेती में जल प्रबंधन का महत्व क्या है?': 'सभी',
+                // Pest Control
+                'Q1. प्राकृतिक कीट नियंत्रण का एक तरीका क्या है?': 'लेडी बर्ड बीटल',
+                'Q2. फेरोमोन जाल का उपयोग किस लिए होता है?': 'कीटों को आकर्षित करना',
+                'Q3. एकीकृत कीट प्रबंधन (IPM) क्या है?': 'जैविक और रासायनिक तरीकों का संयोजन',
+                // Crop Rotation
+                'Q1. फसल चक्र का मुख्य उद्देश्य क्या है?': 'मिट्टी की उर्वरता बनाए रखना',
+                'Q2. फसल चक्र में किन फसलों को शामिल किया जाता है?': 'दलहन और तिलहन',
+                'Q3. फसल चक्र से कीट नियंत्रण कैसे होता है?': 'कीटों का जीवन चक्र तोड़ना',
+                // Water Conservation
+                'Q1. ड्रिप सिंचाई का मुख्य लाभ क्या है?': 'पानी की बचत',
+                'Q2. वर्षा जल संचयन का उपयोग किस लिए होता है?': 'सभी',
+                'Q3. मल्चिंग से जल संरक्षण कैसे होता है?': 'वाष्पीकरण कम करना',
+                // Solar Energy
+                'Q1. सौर ऊर्जा का कृषि में उपयोग क्या है?': 'सिंचाई पंप चलाना',
+                'Q2. सौर पैनल का मुख्य लाभ क्या है?': 'सभी',
+                'Q3. सौर ऊर्जा से चलने वाला उपकरण कौन सा है?': 'सौर ड्रायर',
+                // Tree Plantation
+                'Q1. वृक्षारोपण का पर्यावरणीय लाभ क्या है?': 'सभी',
+                'Q2. वृक्षारोपण से मिट्टी की उर्वरता कैसे बढ़ती है?': 'सभी',
+                'Q3. वृक्षारोपण का सामाजिक लाभ क्या है?': 'सभी'
+            };
+
+            if (selected) {
+                const isCorrect = selected.textContent === correctAnswers[questionText];
+                alert(isCorrect ? 'Correct! +50 points' : 'Incorrect. Try again!');
+                if (isCorrect) {
+                    // Update points in the corresponding learning card
+                    const category = button.closest('.quiz-container').id.replace('quiz-', '');
+                    const card = Array.from(document.querySelectorAll('.learning-card')).find(c => c.onclick.toString().includes(category));
+                    if (card) {
+                        const pointsBadge = card.querySelector('.points-badge');
+                        if (pointsBadge) {
+                            const currentPoints = parseInt(pointsBadge.textContent.match(/\d+/)[0]);
+                            pointsBadge.textContent = `+${currentPoints + 50} pts`;
+                        }
+                    }
+                }
+            } else {
+                alert('Please select an option!');
+            }
+        }
+    </script>
+</body>
+</html>
