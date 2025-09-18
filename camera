@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Crop Advisory</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            margin-bottom: 20px;
+        }
+        .header h2 {
+            font-size: 24px;
+            color: #333;
+            margin: 0;
+        }
+        .header p {
+            font-size: 14px;
+            color: #666;
+            margin: 5px 0 0;
+        }
+        .header .notification {
+            color: #ff0000;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        .camera-section {
+            border: 2px dashed #28a745;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #e9f5e9;
+        }
+        .camera-preview {
+            width: 100%;
+            height: 150px;
+            background-color: #000;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .camera-icon {
+            width: 40px;
+            height: 40px;
+            background: url('black-camera.png') no-repeat center;
+            background-size: contain;
+            margin: 0 auto 20px;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn-primary {
+            background-color: #28a745;
+            color: #fff;
+        }
+        .btn-secondary {
+            background-color: #fff;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+        .tips {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fff3cd;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #856404;
+        }
+        .nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #fff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .nav a {
+            text-decoration: none;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>फसल सलाह सेंकड़ <span class="notification">3</span></h2>
+            <p>कीट और बीमारी की पहचान के लिए फोटो लें</p>
+        </div>
+        <div class="camera-section">
+            <div class="camera-preview"></div>
+            <div class="camera-icon"></div>
+            <button class="btn btn-primary">फोटो लें</button>
+            <button class="btn btn-secondary">गैलरी से अपलोड करें</button>
+        </div>
+        <div class="tips">
+            फोटो टिप्स: अच्छी रोशनी में फोटो लें और कीट/बीमारी को स्पष्ट दिखाएं।
+        </div>
+    </div>
+    <div class="nav">
+        <a href="#">होम</a>
+        <a href="#">चैट</a>
+        <a href="#">कैमरा</a>
+        <a href="#">बाजार</a>
+        <a href="#">प्रोफाइल</a>
+    </div>
+</body>
+</html>
