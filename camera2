@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>फसल स्वास्थ्य स्कैनर</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: system-ui, -apple-system, sans-serif;
+        background-color: #f5f5f5;
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .app-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .app-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin: 0 0 8px 0;
+        color: #333;
+    }
+
+    .app-subtitle {
+        font-size: 14px;
+        color: #666;
+        margin: 0;
+    }
+
+    .upload-container {
+        background-color: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .upload-area {
+        border: 2px dashed #4CAF50;
+        border-radius: 8px;
+        padding: 40px;
+        margin-bottom: 20px;
+        background-color: #f8fdf8;
+    }
+
+    .upload-icon {
+        width: 60px;
+        height: 60px;
+        background-color: #4CAF50;
+        border-radius: 8px;
+        margin: 0 auto 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: white;
+    }
+
+    .camera-button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 40px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .file-button {
+        background-color: transparent;
+        color: #666;
+        border: none;
+        font-size: 14px;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    .tips-container {
+        background-color: #fff9e6;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #f0e68c;
+    }
+
+    .tips-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        margin: 0 0 15px 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .tips-list {
+        margin: 0;
+        padding-left: 20px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .tips-list li {
+        margin-bottom: 8px;
+    }
+
+    .scans-container {
+        background-color: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .scans-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        margin: 0 0 20px 0;
+    }
+
+    .scan-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .scan-item:last-child {
+        border-bottom: none;
+    }
+
+    .scan-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 20px;
+    }
+
+    .scan-icon.tomato {
+        background-color: #ffebee;
+    }
+
+    .scan-icon.plant {
+        background-color: #e8f5e8;
+    }
+
+    .scan-details {
+        flex: 1;
+    }
+
+    .scan-name {
+        font-size: 14px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 4px;
+    }
+
+    .scan-status {
+        font-size: 12px;
+        color: #666;
+    }
+
+    .scan-date {
+        font-size: 12px;
+        color: #666;
+    }
+
+    .scan-metrics {
+        display: flex;
+        align-items: center;
+    }
+
+    .confidence-score {
+        background-color: #ff9800;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: bold;
+        margin-right: 8px;
+    }
+
+    .risk-level {
+        background-color: #ff9800;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+    }
+
+    .ai-footer {
+        background-color: #f3e5f5;
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid #e1bee7;
+    }
+
+    .ai-info {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        color: #7b1fa2;
+    }
+
+    .ai-icon {
+        margin-right: 8px;
+        font-size: 16px;
+    }
+
+    .ai-description {
+        font-size: 12px;
+        color: #666;
+        margin: 8px 0 0 24px;
+    }
+</style>
+</head>
+<body>
+<div class="app-header">
+    <h1 class="app-title">फसल स्वास्थ्य स्कैनर</h1>
+    <p class="app-subtitle">बीज और बीमारियों का पता लगाने के लिए AI तकनीक का उपयोग करें</p>
+</div>
+
+<div class="upload-container">
+    <div class="upload-area">
+        <div class="upload-icon">📷</div>
+    </div>
+    <button class="camera-button">📷 फोटो दें</button>
+    <button class="file-button">📁 फाइलों से अपलोड करें</button>
+</div>
+
+<div class="tips-container">
+    <h3 class="tips-title">📋 फोटो टिप्स</h3>
+    <ul class="tips-list">
+        <li>पत्ती, फूल की बीमारी या कीड़े का फोटो लें</li>
+        <li>पर्याप्त प्रकाश में ली गई फोटो का प्रयोग करें</li>
+        <li>पत्ती सामान्य हो या पत्ती गोभी की फोटो लें तो फोटो लें</li>
+    </ul>
+</div>
+
+<div class="scans-container">
+    <h3 class="scans-title">हाल की स्कैन</h3>
+    
+    <div class="scan-item">
+        <div class="scan-icon tomato">🍎</div>
+        <div class="scan-details">
+            <div class="scan-name">टमाटर पत्ता</div>
+            <div class="scan-status">बैक्टीरिया ब्लाइट रोग</div>
+            <div class="scan-date">स्कैन किया गया: 2 दिन पहले</div>
+        </div>
+        <div class="scan-metrics">
+            <span class="confidence-score">85%</span>
+            <span class="risk-level">उच्च</span>
+        </div>
+    </div>
+
+    <div class="scan-item">
+        <div class="scan-icon plant">🌿</div>
+        <div class="scan-details">
+            <div class="scan-name">डायटम का पेड़</div>
+            <div class="scan-status">स्वस्थ - कोई समस्या नहीं</div>
+            <div class="scan-date">स्कैन: 1 दिन पहले</div>
+        </div>
+        <div class="scan-metrics">
+            <span class="confidence-score">92%</span>
+            <span class="risk-level">अच्छा</span>
+        </div>
+    </div>
+</div>
+
+<div class="ai-footer">
+    <div class="ai-info">
+        <span class="ai-icon">⚡</span>
+        <strong>AI-संचालित पहचान</strong>
+    </div>
+    <p class="ai-description">तुरंत 100+ बीमारियों को कुछ ही सेकंड में पहचानता है</p>
+</div>
+</body>
+</html>
